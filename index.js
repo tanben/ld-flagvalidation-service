@@ -22,7 +22,7 @@ router.post('/validate-flag', verifyWebhookSignature(X_LD_HEADER, WEBHOOK_SECRET
             validateSchema(schemas.flagConfig),
             (req, res) => { 
                 
-                // Add your handler here:
+                // Add your success handler here:
                 //   * Email notifications
                 //   * Automatic flag deletion scheduling
                 //   * Slack notifications

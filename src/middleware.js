@@ -20,7 +20,12 @@ function validateSchema(schema){
          });
 
         if (typeof error !== 'undefined'){
-            
+            // Add your failure handler here:
+            //   * Email notifications
+            //   * Automatic flag deletion scheduling
+            //   * Slack notifications
+            //   * Audit logging 
+
             const {_maintainer:maintainer} = jsonBody.currentVersion;
             delete maintainer._links;
 
@@ -33,7 +38,7 @@ function validateSchema(schema){
 }
 
 
-function verifyWebhookSignature(headerAttr, secret){
+function verifyWebhookSignature(headerAttr, secret, notify){
 
     return (req, res, next)=>{
         const error={details:[]};
@@ -46,6 +51,13 @@ function verifyWebhookSignature(headerAttr, secret){
         }
 
         if (error.details.length>0){
+            // Add your failure handler here:
+            //   * Email notifications
+            //   * Automatic flag deletion scheduling
+            //   * Slack notifications
+            //   * Audit logging 
+
+
             res.status(401).json(formatErrorMessage(error));
             return false;
         }
