@@ -38,7 +38,7 @@ function validateSchema(schema){
 }
 
 
-function verifyWebhookSignature(headerAttr, secret, notify){
+function verifyWebhookSignature(headerAttr, secret){
 
     return (req, res, next)=>{
         const error={details:[]};
