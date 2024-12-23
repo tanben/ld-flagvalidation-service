@@ -1,5 +1,5 @@
-function formatErrorMessage(maintainer, error){
-
+function formatErrorMessage(error, maintainer={}){
+    
     return  {
         isValid: false,
         maintainer,
@@ -20,10 +20,11 @@ function validateSchema(schema){
          });
 
         if (typeof error !== 'undefined'){
+            
             const {_maintainer:maintainer} = jsonBody.currentVersion;
             delete maintainer._links;
 
-            res.status(422).json(formatErrorMessage(maintainer, error));
+            res.status(422).json(formatErrorMessage(error, maintainer));
             return false;
         }
         next(); 
