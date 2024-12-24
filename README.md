@@ -100,6 +100,14 @@ For Invalid flag configuration
 		"role": "owner",
 		"email": "rbanister@examples.com"
 	},
+	"flag": {
+		"name": "testflag",
+		"kind": "boolean",
+		"key": "projidTestflag",
+		"title": "[Ray Banister](mailto:rbanister@examples.com) created the flag [testflag](https://invalid.invalid.com/sandbox/~/features/projidTestflag)",
+		"titleVerb": "created the flag",
+		"creationDate": 1734617269257
+	},
 	"errors": [
 		{
 			"field": "currentVersion.name",

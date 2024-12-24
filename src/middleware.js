@@ -1,8 +1,9 @@
-function formatErrorMessage(error, maintainer={}){
+
+function formatErrorMessage(error, details={}){
     
     return  {
         isValid: false,
-        maintainer,
+        ...details,
         errors: error.details.map(err => ({
             field: err.path.join('.'),
             message: err.message
@@ -11,8 +12,6 @@ function formatErrorMessage(error, maintainer={}){
 }
 
 function validateSchema(schema){
-   
-    
     return (req, res, next)=>{
         const jsonBody = req.body;
         const { error } = schema.validate(jsonBody ,{ 
@@ -25,11 +24,8 @@ function validateSchema(schema){
             //   * Automatic flag deletion scheduling
             //   * Slack notifications
             //   * Audit logging 
-
-            const {_maintainer:maintainer} = jsonBody.currentVersion;
-            delete maintainer._links;
-
-            res.status(422).json(formatErrorMessage(error, maintainer));
+            res.status(422).json(formatErrorMessage(error, errorFlagDetails(jsonBody)));
+            
             return false;
         }
         next(); 
@@ -38,9 +34,12 @@ function validateSchema(schema){
 }
 
 
+
+
 function verifyWebhookSignature(headerAttr, secret){
 
     return (req, res, next)=>{
+        const jsonBody = req.body;
         const error={details:[]};
         const webhookSignature = req.get(headerAttr);
 
@@ -57,8 +56,7 @@ function verifyWebhookSignature(headerAttr, secret){
             //   * Slack notifications
             //   * Audit logging 
 
-
-            res.status(401).json(formatErrorMessage(error));
+            res.status(401).json(formatErrorMessage(error, errorFlagDetails(jsonBody)));
             return false;
         }
         next();
@@ -66,7 +64,23 @@ function verifyWebhookSignature(headerAttr, secret){
     
 }
 
-module.exports = {
-    validateSchema,
-    verifyWebhookSignature
+function errorFlagDetails(jsonBody){
+    if (!jsonBody){
+        return {};
+    }
+    
+    const {currentVersion,  title, titleVerb} = jsonBody;
+    const {_maintainer:maintainer, name, kind,key, creationDate} = currentVersion;
+    delete maintainer._links;
+    
+    return {
+        maintainer, 
+        flag:{
+            name, kind, key, title, titleVerb, creationDate
+        }
+    };
+}
+module.exports ={
+    verifyWebhookSignature,
+    validateSchema
 };
