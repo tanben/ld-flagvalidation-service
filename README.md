@@ -41,7 +41,8 @@ A sample webhook service that validates feature flag configurations against orga
    ```
    WEBHOOK_SECRET=YOUR_WEBHOOK_SECRET
    ```
-4. Load the `insominia-api-tests.json` in Insomnia to start testing.
+4. Load the `insominia-api-tests.json` in Insomnia to start testing. Modify the webhook secret Headers > x-ld-signature, default "test".
+   
    
 
 ## Request Format
