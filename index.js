@@ -11,7 +11,7 @@ const WEBHOOK_SECRET=  process.env.WEBHOOK_SECRET;
 const X_LD_HEADER=  process.env.X_LD_HEADER;
 
 app.use(cors()); 
-app.use(express.json()); // To parse JSON request
+app.use(express.json());
 const router = express.Router();
 
 router.get('/', (req, res) => res.send('Hello World!')) 

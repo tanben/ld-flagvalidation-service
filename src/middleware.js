@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 function formatErrorMessage(error, details = {}) {
     if (!error?.details) {
         throw new Error("Invalid error object provided");
@@ -34,6 +36,15 @@ function errorFlagDetails(jsonBody) {
             creationDate,
         },
     };
+}
+
+function computeSignature(jsonBody, secret) {
+    var signature = crypto
+        .createHmac("sha256", secret)
+        .update(JSON.stringify(jsonBody), "utf-8")
+        .digest("hex");
+    
+    return signature;
 }
 
 function hasError(error) {
@@ -87,15 +98,15 @@ function verifyWebhookSignature(headerAttr, secret) {
 
     return (req, res, next) => {
         try {
-            const webhookSignature = req.get(headerAttr);
+            const signature = req.get(headerAttr);
             const error = { details: [] };
 
-            if (!webhookSignature) {
+            if (!signature) {
                 error.details.push({
                     path: [headerAttr],
                     message: `Missing header: ${headerAttr}`,
                 });
-            } else if (webhookSignature !== secret) {
+            } else if ( computeSignature(req.body, secret) !== signature) {
                 error.details.push({
                     path: [headerAttr],
                     message: "Invalid signature",
@@ -107,7 +118,7 @@ function verifyWebhookSignature(headerAttr, secret) {
                     error,
                     errorFlagDetails(req.body)
                 );
-                 // TODO: Implement your failure handlers here:
+                // TODO: Implement your failure handlers here:
                 //   * Email notifications
                 //   * Automatic flag deletion scheduling
                 //   * Slack notifications
@@ -134,4 +145,5 @@ function verifyWebhookSignature(headerAttr, secret) {
 module.exports = {
     verifyWebhookSignature,
     validateSchema,
+    computeSignature
 };
