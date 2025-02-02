@@ -1,7 +1,7 @@
 {
-  "name": "sample-express",
+  "name": "ld-flagvalidaiton-service",
   "version": "1.0.0",
-  "description": "",
+  "description": "A webhook service that validates LaunchDarkly feature flag configurations against organization standards",
   "main": "index.js",
   "scripts": {
     "start": "node --inspect --watch-path=./ ./index.js",
